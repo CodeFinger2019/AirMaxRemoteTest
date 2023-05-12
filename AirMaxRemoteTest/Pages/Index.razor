@@ -1,0 +1,68 @@
+﻿@page "/"
+@using AirMaxRemoteTest.Helpers
+@inject VehicleDataDecoder decoder
+
+
+<h1>Airmax Remote - Vehicle Data Decoder</h1>
+
+<div class="form-group">
+    <label for="encodedData">
+        <b>Encoded Data:</b>
+    </label>
+    <input id="encodedData" type="text" class="form-control" @bind="EncodedData"/>
+</div>
+
+<br/>
+
+
+<div class="form-group mb-4">
+    <button class="btn btn-primary float-end" @onclick="DecodeData">Decode</button>
+</div>
+
+
+<div class="form-group mb-4">
+    <label for="decodedData">
+        <b>Decoded Data:</b>
+    </label>
+
+    <textarea id="decodedData" class="form-control" @bind="DecodedData" readonly rows="17"></textarea>
+    
+  
+</div>
+
+
+@code {
+    private string EncodedData { get; set; }
+    private string DecodedData { get; set; }
+
+    private void DecodeData()
+    {
+        try
+        {
+            var vehicleData = decoder.Decode(EncodedData);
+
+
+            DecodedData = $"=========== beginning developer test message =========== \n" +
+                          $"=========== Header Start =========== \n" +
+                          $"Message type: {vehicleData.MessageType}\n" +
+                          $"Event Time: {vehicleData.CurrentTime}\n" +
+                          $"Device ID: {vehicleData.DeviceID}\n" +
+                          $"=========== Header End =========== \n" +
+                          $"=========== Message data start =========== \n" +
+                          $"Current Speed: {vehicleData.CurrentSpeedMPH}\n" +
+                          $"Odometer: {vehicleData.Odometer}\n" +
+                          $"Trip ID: {vehicleData.TripID}\n" +
+                          $"Trip Start: {vehicleData.TripStart}\n" +
+                          $"Trip End: {vehicleData.TripEnd}\n" +
+                          $"Trip Latitude: {vehicleData.Latitude}\n" +
+                          $"Trip Longitude: {vehicleData.Longitude}\n" +
+                          $"=========== Message data end =========== \n" +
+                          $"=========== End Developer Test Message  =========== \n";
+        }
+        catch (Exception ex)
+        {
+            DecodedData = ex.Message;
+        }
+    }
+
+}
