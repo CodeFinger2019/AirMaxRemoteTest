@@ -1,7 +1,7 @@
 using AirMaxRemoteTest.Data;
 using AirMaxRemoteTest.Helpers;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<VehicleDataDecoder>();
+
+using var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("./Log.txt")
+    .CreateLogger();
+
+builder.Services.AddSingleton<Serilog.ILogger>(log);
+log.Information("Airmax Remote Test - Initialised");
 
 var app = builder.Build();
 

@@ -1,0 +1,2 @@
+2023-05-13 12:20:41.273 +01:00 [INF] Done setting up serilog!
+2023-05-13 12:21:10.369 +01:00 [INF] Done setting up serilog!

@@ -1,9 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using Serilog;
+
 
 namespace AirMaxRemoteTest.Helpers
 {
     public static class HexExtensions
     {
+
+     
         public static byte[] HexToBytes(this string hex)
         {
             if (hex == null)
@@ -20,7 +25,13 @@ namespace AirMaxRemoteTest.Helpers
 
             for (int i = 0; i < hex.Length; i += 2)
             {
-                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+                if (!byte.TryParse(hex.Substring(i, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture,
+                        out byte b))
+                {
+                    throw new ArgumentException("Invalid hex string. Contains non-hex characters.", nameof(hex));
+                }
+
+                bytes[i / 2] = b;
             }
 
             return bytes;
